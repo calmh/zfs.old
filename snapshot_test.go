@@ -6,14 +6,14 @@ import (
 )
 
 func TestSnapshotNonexistant(t *testing.T) {
-	err := zfs.Snapshot("nonexistant", "foo")
+	err := zfs.TakeSnapshot("nonexistant", "foo")
 	if err == nil {
 		t.Error("Unexpected success for snapshotting nonexistant dataset")
 	}
 }
 
 func TestSnapshotOk(t *testing.T) {
-	err := zfs.Snapshot("zones", "foo")
+	err := zfs.TakeSnapshot("zones", "foo")
 	if err != nil {
 		t.Error("Unexpected error", err)
 	}

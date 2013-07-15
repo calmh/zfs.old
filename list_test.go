@@ -27,7 +27,7 @@ var testListResult = []struct {
 func TestList(t *testing.T) {
 	nItems := 77
 
-	l, err := zfs.List()
+	l, err := zfs.ListDatasets()
 	if err != nil {
 		t.Error(err)
 	}
@@ -70,7 +70,7 @@ var testSnapshotResult = []struct {
 func TestSnapshot(t *testing.T) {
 	nItems := 2484
 
-	l, err := zfs.Snapshots()
+	l, err := zfs.ListSnapshots()
 	if err != nil {
 		t.Error(err)
 	}
@@ -93,15 +93,6 @@ func TestSnapshot(t *testing.T) {
 		}
 		if i.Creation != res.Creation {
 			t.Errorf("Type mismatch for %d: %d != %d", res.Idx, i.Creation, res.Creation)
-		}
-	}
-}
-
-func BenchmarkList(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_, err := zfs.List()
-		if err != nil {
-			b.Error(err)
 		}
 	}
 }

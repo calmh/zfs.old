@@ -7,11 +7,17 @@ import (
 )
 
 type ListEntry struct {
+	// Name of the filesystem, volume or clone in standard pool/fs format.
 	Name       string
+	// NUmber of bytes used.
 	Used       uint64
+	// NUmber of bytes available.
 	Avail      uint64
+	// NUmber of bytes referred to.
 	Refer      uint64
+	// File system mountpoint or "-".
 	Mountpoint string
+	// "filesystem", "volume" or "clone"
 	Type       string
 }
 
@@ -23,7 +29,10 @@ type SnapshotEntry struct {
 	Creation int32
 }
 
-func List() ([]ListEntry, error) {
+// ListDatasets lists regular ZFS datasets, i.e. filesystems, volumes and
+// clones. Snapshots are not included, similarly to how they are not included
+// in "zfs list" by default.
+func ListDatasets() ([]ListEntry, error) {
 	lines, err := zfs("list", "-pHo", "name,used,avail,refer,mountpoint,type")
 	if err != nil {
 		return nil, err
@@ -62,7 +71,8 @@ func List() ([]ListEntry, error) {
 	return entries, nil
 }
 
-func Snapshots() ([]SnapshotEntry, error) {
+// ListSnapshots lists all ZFS snapshots.
+func ListSnapshots() ([]SnapshotEntry, error) {
 	lines, err := zfs("list", "-pHo", "name,used,refer,creation", "-t", "snapshot")
 	if err != nil {
 		return nil, err

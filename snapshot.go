@@ -1,11 +1,13 @@
 package zfs
 
-func Snapshot(dataset, name string) error {
+// TakeSnapshot takes a non-recursive snapshot of dataset called name.
+func TakeSnapshot(dataset, name string) error {
 	_, err := zfs("snapshot", dataset+"@"+name)
 	return err
 }
 
-func RecursiveSnapshot(dataset, name string) error {
+// TakeSnapshotRecursive take s a recursive snapshot of dataset called name.
+func TakeSnapshotRecursive(dataset, name string) error {
 	_, err := zfs("snapshot", "-r", dataset+"@"+name)
 	return err
 }
