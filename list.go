@@ -1,6 +1,7 @@
 package zfs
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -28,9 +29,16 @@ func List() ([]ListEntry, error) {
 		return nil, err
 	}
 
-	entries := make([]ListEntry, 0, 16)
+	entries := make([]ListEntry, 0, len(lines))
 	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+
 		fields := strings.Fields(string(line))
+		if len(fields) != 6 {
+			return nil, fmt.Errorf("Unparseable line: %#v", line)
+		}
 
 		name := fields[0]
 		used, err := strconv.ParseUint(fields[1], 10, 64)
@@ -60,7 +68,7 @@ func Snapshots() ([]SnapshotEntry, error) {
 		return nil, err
 	}
 
-	entries := make([]SnapshotEntry, 0, 16)
+	entries := make([]SnapshotEntry, 0, len(lines))
 	for _, line := range lines {
 		fields := strings.Fields(line)
 

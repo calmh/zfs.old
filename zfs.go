@@ -1,31 +1,23 @@
 package zfs
 
 import (
-	"bufio"
-	"io"
 	"os/exec"
+	"strings"
 )
 
 func zfs(args ...string) (lines []string, err error) {
 	cmd := exec.Command("zfs", args...)
-	stdout, err := cmd.StdoutPipe()
+	bytes, err := cmd.Output()
 	if err != nil {
 		return
 	}
-	r := bufio.NewReader(stdout)
-	cmd.Start()
 
-	lines = make([]string, 0, 16)
-	for {
-		var line string
-		line, err = r.ReadString('\n')
-		if err == io.EOF {
-			return lines, nil
+	tmpLines := strings.Split(string(bytes), "\n")
+	lines = make([]string, 0, len(lines))
+	for _, line := range tmpLines {
+		if line != "" {
+			lines = append(lines, line)
 		}
-		if err != nil {
-			return
-		}
-		lines = append(lines, line)
 	}
 	return
 }
